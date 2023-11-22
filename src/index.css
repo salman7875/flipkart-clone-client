@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.active-link {
+  color: rgb(59 130 246);
+  border-bottom: 2px solid rgb(59 130 246);
+}
+
+.active-pag {
+  background-color: rgb(59 130 246);
+  color: #fff;
+  border-radius: 50%;
+}
