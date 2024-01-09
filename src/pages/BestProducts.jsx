@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Spinner from "../components/Spinner";
+import { apiEndpoint } from "../utils/environment";
 const BestProductItem = lazy(() => import("../components/BestProductItem"));
 
 const BestProducts = () => {
@@ -14,7 +15,7 @@ const BestProducts = () => {
     const fetchBestProducts = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/product/best?type=${type}`
+          `${apiEndpoint}/product/best?type=${type}`
         );
         setProducts(data.products);
         console.log(data);

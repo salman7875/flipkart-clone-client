@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
@@ -26,8 +25,9 @@ const SignIn = () => {
 
   const signupHandler = async () => {
     const formData = { avatar, name, role, email, password };
+
     const res = await authHandler("signup", formData);
-    if (res.response.success) {
+    if (res.success) {
       setAvatar("");
       setName("");
       setRole(0);

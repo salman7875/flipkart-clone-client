@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const carousel = [
   {
@@ -18,29 +18,29 @@ const carousel = [
   },
 ];
 const Carousel = () => {
-  const [carouselPage, setCarouselPage] = useState(carousel);
   const [index, setIndex] = useState(0);
+  const carouselLength = carousel.length - 1;
 
   useEffect(() => {
-    const interval = setTimeout(() => {
-      setIndex((prev) => (prev < carouselPage.length - 1 ? prev + 1 : 0));
-      console.log(-index * 100);
+    const time = setTimeout(() => {
+      setIndex((prev) => (prev < carouselLength ? prev + 1 : 0));
     }, 2500);
+    console.log(index);
 
     return () => {
-      clearTimeout(interval);
+      clearTimeout(time);
     };
   }, [index]);
 
   return (
     <section className="">
       <div className="flex">
-        {carouselPage.map((data) => (
+        {carousel.map((data) => (
           <img
             src={data.image}
-            alt=""
+            alt={data.id}
             key={data.id}
-            className={`translate-x-[-${index * 100}%] transition-all duration-700`}
+            className={`translate-x-[-${index}00%] transition-all duration-700`}
           />
         ))}
       </div>

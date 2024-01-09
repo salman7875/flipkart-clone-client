@@ -1,8 +1,9 @@
 import { Suspense, lazy, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Spinner from "../components/Spinner";
+import { apiEndpoint } from "../utils/environment";
 
 const Ratings = lazy(() => import("../components/Ratings"));
 
@@ -10,12 +11,13 @@ const ProductDetail = () => {
   const { token } = useSelector((state) => state.auth);
   const [productDetail, setProductDetail] = useState({});
   const [params] = useSearchParams();
+  const navigate = useNavigate();
   const id = params.get("id");
 
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5000/product/${id}`);
+        const { data } = await axios.get(`${apiEndpoint}/product/${id}`);
         if (data.success) {
           setProductDetail(data.product);
         }
@@ -28,16 +30,19 @@ const ProductDetail = () => {
 
   const addToCartHandler = async () => {
     try {
-      const { data } = await axios.post(
-        `http://localhost:5000/user/cart?id=${id}&q=1`,
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
-      console.log(data);
+      if (token) {
+        const { data } = await axios.post(
+          `${apiEndpoint}/user/cart?id=${id}&q=1`,
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+      } else {
+        navigate("/login");
+      }
     } catch (err) {
       console.log(err);
     }
