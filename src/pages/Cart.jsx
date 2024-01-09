@@ -6,6 +6,8 @@ import Spinner from "../components/Spinner";
 import { apiEndpoint } from "../utils/environment";
 const CartItem = lazy(() => import("../components/CartItem"));
 import { generateRandomNum } from "../utils/custom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Cart = () => {
   const { token } = useSelector((state) => state.auth);
@@ -82,7 +84,7 @@ const Cart = () => {
           razorpayPaymentId = response.razorpay_payment_id;
           razorpayOrderId = response.razorpay_order_id;
           razorpaySignature = response.razorpay_signature;
-          await axios.post(
+          const { data } = await axios.post(
             `${apiEndpoint}/order/verify`,
             {
               order_id: razorpayOrderId,
@@ -92,6 +94,16 @@ const Cart = () => {
             { headers: { Authorization: "Bearer " + token } }
           );
           navigate("/");
+          toast(data.message, {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         },
         prefill: {
           name: "Vicky Kaushal",
@@ -113,6 +125,16 @@ const Cart = () => {
       });
     } catch (err) {
       console.log(err);
+      toast(err.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 

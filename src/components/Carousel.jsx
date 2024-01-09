@@ -25,7 +25,6 @@ const Carousel = () => {
     const time = setTimeout(() => {
       setIndex((prev) => (prev < carouselLength ? prev + 1 : 0));
     }, 2500);
-    console.log(index);
 
     return () => {
       clearTimeout(time);
