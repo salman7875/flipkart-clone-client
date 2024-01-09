@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../redux/AuthSlice";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 const Navbar = () => {
   const { user, token } = useSelector((state) => state.auth);
@@ -41,7 +40,7 @@ const Navbar = () => {
         className="h-10 px-5 w-[35vw]"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        onKeyDown={e => setKey(e.code)}
+        onKeyDown={(e) => setKey(e.code)}
       />
       {token ? (
         <button
@@ -58,7 +57,7 @@ const Navbar = () => {
           Login
         </button>
       )}
-      {user.role ? (
+      {user.role == "1" ? (
         <Link to="/create/product">Upload Product for Sale</Link>
       ) : (
         ""

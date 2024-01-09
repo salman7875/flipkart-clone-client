@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const BestProductItem = ({product}) => {
+const BestProductItem = ({ product }) => {
   return (
     <div className="" key={product.id}>
       <img

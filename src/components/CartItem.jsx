@@ -1,20 +1,6 @@
-import axios from "axios";
-import { useSelector } from "react-redux";
-
-const CartItem = ({ cart, onRemoveItem }) => {
-  const { token } = useSelector((state) => state.auth);
-
+const CartItem = ({ cart, onItemRemove }) => {
   const removeCartItemHandler = async (id) => {
-    try {
-      const data = await axios.delete(`http://localhost:5000/user/cart/${id}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-    }
+    onItemRemove();
   };
 
   return (
@@ -44,10 +30,7 @@ const CartItem = ({ cart, onRemoveItem }) => {
           </button>
         </div>
         <button className="font-semibold">SAVE FOR LATER</button>
-        <button
-          className="font-semibold"
-          onClick={() => removeCartItemHandler(cart.idProduct)}
-        >
+        <button className="font-semibold" onClick={removeCartItemHandler}>
           REMOVE
         </button>
       </div>

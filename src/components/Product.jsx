@@ -1,7 +1,9 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import ProductList from "./ProductList";
+import { apiEndpoint } from "../utils/environment";
 
 const Product = ({ type }) => {
   const [products, setProducts] = useState([]);
@@ -11,7 +13,7 @@ const Product = ({ type }) => {
     const fetchBestProducts = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/product/best?type=${type}`
+          `${apiEndpoint}/product/best?type=${type}`
         );
         setProducts(data.products);
         console.log(data);

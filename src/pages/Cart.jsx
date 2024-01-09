@@ -3,7 +3,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Spinner from "../components/Spinner";
+import { apiEndpoint } from "../utils/environment";
 const CartItem = lazy(() => import("../components/CartItem"));
+import { generateRandomNum } from "../utils/custom";
 
 const Cart = () => {
   const { token } = useSelector((state) => state.auth);
@@ -18,10 +20,12 @@ const Cart = () => {
     navigate("/login");
   };
 
+  let razorpayPaymentId, razorpayOrderId, razorpaySignature;
+
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/user/cart", {
+        const { data } = await axios.get(`${apiEndpoint}/user/cart`, {
           headers: {
             Authorization: "Bearer " + token,
           },
@@ -39,23 +43,99 @@ const Cart = () => {
     fetchCart();
   }, [token]);
 
+  const removeCartItem = async (id) => {
+    try {
+      const data = await axios.delete(`${apiEndpoint}/user/cart/${id}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      setCart((prev) => prev.filter((item) => item.idProduct !== id));
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const orderHandler = async () => {
+    try {
+      const formData = {
+        amount: 5000,
+        currency: "INR",
+        receipt: "receipt_" + generateRandomNum(4),
+      };
+      const { data } = await axios.post(
+        `${apiEndpoint}/order/create`,
+        formData,
+        { headers: { Authorization: "Bearer " + token } }
+      );
+      const orderId = data.response.id;
+      const options = {
+        key: "rzp_test_UmC0vdysZbuqoM",
+        amount: formData.amount,
+        currency: formData.currency,
+        name: "Acme Corp",
+        description: "Test Transaction",
+        image: "https://example.com/your_logo",
+        order_id: orderId,
+        handler: async (response) => {
+          razorpayPaymentId = response.razorpay_payment_id;
+          razorpayOrderId = response.razorpay_order_id;
+          razorpaySignature = response.razorpay_signature;
+          await axios.post(
+            `${apiEndpoint}/order/verify`,
+            {
+              order_id: razorpayOrderId,
+              payment_id: razorpayPaymentId,
+              razorpay_signature: razorpaySignature,
+            },
+            { headers: { Authorization: "Bearer " + token } }
+          );
+          navigate("/");
+        },
+        prefill: {
+          name: "Vicky Kaushal",
+          email: "vickat2@example.com",
+          contact: "9000090000",
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      const rzp1 = new Razorpay(options);
+      rzp1.open();
+      rzp1.on("payment.failed", function (response) {
+        navigate("/");
+        throw new Error(response.error.description);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="h-[90vh]">
       <div className="w-[50vw] h-[75vh] mb-5 hide-scrollbar border-[1px] mx-auto mt-5">
         <header className="h-16 bg-gray-300 flex">
           <button className="flex-1 text-xl border-b-4 border-blue-500">
-            Flipkar
+            Flipkart
           </button>
-          <button className="flex-1 text-xl">Grocery</button>
         </header>
 
-        <section className="mt-2 h-full overflow-y-scroll hide-scrollbar bg-slate-300">
+        <section className="h-full overflow-y-scroll hide-scrollbar bg-slate-300">
           {isLogin ? (
             <>
               <div>
                 <Suspense fallback={<Spinner />}>
-                  {cart.map((cart) => (
-                    <CartItem cart={cart} key={cart.idProduct} />
+                  {cart.map((cartItem) => (
+                    <CartItem
+                      cart={cartItem}
+                      key={cartItem.idProduct}
+                      onItemRemove={() => removeCartItem(cartItem.idProduct)}
+                    />
                   ))}
                 </Suspense>
                 <div className="w-80 p-2 absolute right-5 rounded-lg bg-slate-300 top-24 border-[1px]">
@@ -80,7 +160,10 @@ const Cart = () => {
                   <p className="my-4">You will save ₹5,100 on this order</p>
                 </div>
                 <div className="h-20 bg-slate-700 text-end">
-                  <button className="w-60 py-3 bg-orange-500 mt-4 mx-5 text-white font-semibold">
+                  <button
+                    className="w-60 py-3 bg-orange-500 mt-4 mx-5 text-white font-semibold"
+                    onClick={orderHandler}
+                  >
                     PLACE ORDER
                   </button>
                 </div>

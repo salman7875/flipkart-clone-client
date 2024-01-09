@@ -2,6 +2,8 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/AuthSlice";
 import { useState } from "react";
+import { apiEndpoint } from "../utils/environment";
+
 
 const useAuth = () => {
   const dispatch = useDispatch();
@@ -10,7 +12,7 @@ const useAuth = () => {
   const authHandler = async (type, formData) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:5000/auth/${type}`,
+        `${apiEndpoint}/auth/${type}`,
         JSON.stringify(formData),
         {
           headers: { "Content-Type": "application/json" },

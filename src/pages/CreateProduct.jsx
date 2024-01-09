@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { apiEndpoint } from "../utils/environment";
 
 const CreateProduct = () => {
   const [productImg, setProductImg] = useState();
@@ -23,7 +24,7 @@ const CreateProduct = () => {
     try {
       const formData = { productImg, name, price, description, type };
       const { data } = await axios.post(
-        `http://localhost:5000/product`,
+        `${apiEndpoint}/product`,
         JSON.stringify(formData),
         {
           headers: {

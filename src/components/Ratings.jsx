@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import RatingCommentItem from "./RatingCommentItem";
+import { apiEndpoint } from "../utils/environment";
 
 const Ratings = ({ id }) => {
   const { token } = useSelector((state) => state.auth);
@@ -23,7 +24,7 @@ const Ratings = ({ id }) => {
   useEffect(() => {
     const fetchRatingComments = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5000/rating/${id}`);
+        const { data } = await axios.get(`${apiEndpoint}/rating/${id}`);
         setRatingComments(data.ratings);
       } catch (err) {
         console.log(err);
@@ -35,7 +36,7 @@ const Ratings = ({ id }) => {
   const sendCommentHandler = async (id) => {
     try {
       const data = await axios.post(
-        `http://localhost:5000/rating/${id}`,
+        `${apiEndpoint}/rating/${id}`,
         { message: comment, rating },
         {
           headers: {

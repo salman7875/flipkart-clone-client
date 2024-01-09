@@ -3,6 +3,7 @@ import Pagination from "../components/Pagination";
 import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import MainProductItem from "../components/MainProductItem";
+import { apiEndpoint } from "../utils/environment";
 
 const ListOfProfucts = () => {
   const [products, setProducts] = useState([]);
@@ -16,7 +17,7 @@ const ListOfProfucts = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/product?type=${type}&page=${page}&sort=${sort}&filter=${filter}`
+          `${apiEndpoint}/product?type=${type}&page=${page}&sort=${sort}&filter=${filter}`
         );
         console.log(data);
         setProducts(data.products);
