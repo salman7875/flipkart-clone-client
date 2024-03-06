@@ -9,7 +9,6 @@ const BestProducts = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
   const type = useLocation().search.split("=")[1];
-  console.log(type);
 
   useEffect(() => {
     const fetchBestProducts = async () => {

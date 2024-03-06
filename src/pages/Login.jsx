@@ -7,6 +7,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
   const { authHandler } = useAuth();
 
   const loginHandler = async () => {
@@ -15,6 +16,10 @@ const Login = () => {
       setEmail("");
       setPassword("");
       navigate("/");
+      setError(null);
+    } else {
+      console.log(res.response.data);
+      setError(res.response.data.message);
     }
   };
 
@@ -34,6 +39,7 @@ const Login = () => {
           />
         </div>
         <div className="flex-1 p-5">
+          {error && <p className="text-red-500 text-center mb-1">{error}</p>}
           <div className="mb-5">
             <label htmlFor="email" className="font-semibold">
               Email:{" "}

@@ -15,7 +15,10 @@ const Cart = () => {
     return token ? true : false;
   });
   const [cart, setCart] = useState([]);
-  const [quantity, setQuantity] = useState(0);
+  const [cartDetail, setCartDetail] = useState({
+    totalQuantity: 0,
+    totalAmount: 0,
+  });
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
@@ -32,11 +35,12 @@ const Cart = () => {
             Authorization: "Bearer " + token,
           },
         });
-        let totalItem = 0;
+        let totalQuantity = 0, totalAmount = 0;
         data.cart.forEach((item) => {
-          totalItem += item.quantity;
+          totalQuantity += item.quantity;
+          totalAmount += item.productInfo.price
         });
-        setQuantity(totalItem);
+        setCartDetail((prev) => ({ ...prev, totalQuantity, totalAmount }));
         setCart(data.cart);
       } catch (err) {
         console.log(err);
@@ -164,22 +168,21 @@ const Cart = () => {
                   <h1 className="pb-5">PRICE DETAILS</h1>
                   <hr />
                   <div className="flex justify-between my-4">
-                    <span>Price (1 item)</span>
+                    <span>Price ({cartDetail.totalQuantity} item)</span>
                     <span>$13,999</span>
                   </div>
                   <div className="flex justify-between my-4">
                     <span>Quantity</span>
-                    <span>{quantity}</span>
+                    <span>{cartDetail.totalQuantity}</span>
                   </div>
-                  <div className="flex justify-between my-4">
+                  {/* <div className="flex justify-between my-4">
                     <span>Delivery Charges</span>
                     <span>$40</span>
-                  </div>
+                  </div> */}
                   <div className="flex justify-between my-4 border-2 border-dotted py-4">
                     <span>Total Amount</span>
-                    <span>$8,890</span>
+                    <span><b>$</b> {cartDetail.totalAmount}</span>
                   </div>
-                  <p className="my-4">You will save ₹5,100 on this order</p>
                 </div>
                 <div className="h-20 bg-slate-700 text-end">
                   <button
