@@ -1,9 +1,11 @@
+import axios from "axios";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import Spinner from "../components/Spinner";
 import { apiEndpoint } from "../utils/environment";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Ratings = lazy(() => import("../components/Ratings"));
 
@@ -40,6 +42,17 @@ const ProductDetail = () => {
             },
           }
         );
+        console.log(data);
+        toast('Product Added to Cart', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       } else {
         navigate("/login");
       }

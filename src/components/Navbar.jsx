@@ -1,29 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../redux/AuthSlice";
-import { useEffect, useState } from "react";
+import SearchBox from "./SearchBox";
 
 const Navbar = () => {
   const { user, token } = useSelector((state) => state.auth);
-  const [search, setSearch] = useState("");
-  const [key, setKey] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const time = setTimeout(() => {
-      if (key === "Space") {
-        navigate(`/products?type=${search}&page=1&sort=relevance&filter=0`);
-      }
-    }, 200);
-
-    return () => {
-      clearTimeout(time);
-    };
-  }, [search]);
-
   return (
-    <nav className="fixed top-0 h-16 w-screen bg-blue-500 flex items-center gap-4 justify-center overflow-hidden">
+    <nav className="fixed top-0 h-16 w-screen bg-blue-500 flex items-center gap-4 justify-center overflow-hidden z-10">
       <div>
         <img
           src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
@@ -34,14 +20,7 @@ const Navbar = () => {
           Explore <span className="text-yellow-300">Plus</span>
         </Link>
       </div>
-      <input
-        type="text"
-        placeholder="Search for products, brands and more"
-        className="h-10 px-5 w-[35vw]"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        onKeyDown={(e) => setKey(e.code)}
-      />
+      <SearchBox />
       {token ? (
         <button
           onClick={() => dispatch(logoutUser())}

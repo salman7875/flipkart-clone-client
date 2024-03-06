@@ -10,6 +10,11 @@ const Ratings = ({ id }) => {
   const { token } = useSelector((state) => state.auth);
   const [showCommentBox, setCommentBox] = useState(false);
   const [ratingComments, setRatingComments] = useState([]);
+  const [progressBarData, setprogressBarData] = useState({
+    avgRating: null,
+    noOfRating: null,
+    ratingBars: [],
+  });
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState("");
   const navigate = useNavigate();
@@ -25,6 +30,12 @@ const Ratings = ({ id }) => {
     const fetchRatingComments = async () => {
       try {
         const { data } = await axios.get(`${apiEndpoint}/rating/${id}`);
+        setprogressBarData((prev) => ({
+          ...prev,
+          avgRating: data.avgRating,
+          ratingBars: data.allStars,
+          noOfRating: data.noOfRating,
+        }));
         setRatingComments(data.ratings);
       } catch (err) {
         console.log(err);
@@ -69,22 +80,39 @@ const Ratings = ({ id }) => {
 
       <div className="flex gap-10 items-center">
         <div>
-          <p className="ms-4 text-2xl">4.4 ★</p>
-          <p className="text-gray-600 text-sm">2,562 Ratings &</p>
-          <p className="text-gray-600 text-sm ms-1">310 Reviews</p>
+          <p className="ms-4 text-2xl">
+            {progressBarData.avgRating === null ? 0 : progressBarData.avgRating}{" "}
+            ★
+          </p>
+          <p className="text-gray-600 text-sm">
+            {progressBarData.noOfRating} Ratings & Reviews
+          </p>
         </div>
         <div>
           <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div className="h-full bg-blue-500 rounded-full w-[90%]"></div>
+            <div
+              className={`h-full bg-blue-500 rounded-full w-[${progressBarData.ratingBars[4]}0%]`}
+            ></div>
           </div>
           <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div className="h-full bg-blue-500 rounded-full w-[60%]"></div>
+            <div
+              className={`h-full bg-blue-500 rounded-full w-[${progressBarData.ratingBars[3]}0%]`}
+            ></div>
           </div>
           <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div className="h-full bg-blue-500 rounded-full w-[37%]"></div>
+            <div
+              className={`h-full bg-blue-500 rounded-full w-[${progressBarData.ratingBars[2]}0%]`}
+            ></div>
           </div>
           <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div className="h-full bg-red-500 rounded-full w-[7%]"></div>
+            <div
+              className={`h-full bg-red-500 rounded-full w-[${progressBarData.ratingBars[1]}0%]`}
+            ></div>
+          </div>
+          <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
+            <div
+              className={`h-full bg-red-700 rounded-full w-[${progressBarData.ratingBars[0]}0%]`}
+            ></div>
           </div>
         </div>
       </div>
