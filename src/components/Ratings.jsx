@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import RatingCommentItem from "./RatingCommentItem";
 import { apiEndpoint } from "../utils/environment";
+import RatingBar from "./UI/RatingBar";
 
 const Ratings = ({ id }) => {
   const { token } = useSelector((state) => state.auth);
@@ -18,6 +19,7 @@ const Ratings = ({ id }) => {
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState("");
   const navigate = useNavigate();
+  console.log(progressBarData);
 
   const toggleRatingHandler = () => {
     if (!token) {
@@ -89,31 +91,9 @@ const Ratings = ({ id }) => {
           </p>
         </div>
         <div>
-          <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div
-              className={`h-full bg-blue-500 rounded-full w-[${progressBarData.ratingBars[4]}0%]`}
-            ></div>
-          </div>
-          <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div
-              className={`h-full bg-blue-500 rounded-full w-[${progressBarData.ratingBars[3]}0%]`}
-            ></div>
-          </div>
-          <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div
-              className={`h-full bg-blue-500 rounded-full w-[${progressBarData.ratingBars[2]}0%]`}
-            ></div>
-          </div>
-          <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div
-              className={`h-full bg-red-500 rounded-full w-[${progressBarData.ratingBars[1]}0%]`}
-            ></div>
-          </div>
-          <div className="w-56 h-[0.4rem] bg-gray-200 rounded-full mb-2">
-            <div
-              className={`h-full bg-red-700 rounded-full w-[${progressBarData.ratingBars[0]}0%]`}
-            ></div>
-          </div>
+          {progressBarData.ratingBars.map((bar, i) => (
+            <RatingBar key={bar + Math.random()} index={i + 1} ratings={JSON.stringify(bar)} />
+          ))}
         </div>
       </div>
 
@@ -132,7 +112,7 @@ const Ratings = ({ id }) => {
 
       <div>
         {ratingComments.map((rating) => (
-          <RatingCommentItem rating={rating} key={rating.id} />
+          <RatingCommentItem rating={rating} key={rating.id + Math.random()} />
         ))}
       </div>
     </div>
